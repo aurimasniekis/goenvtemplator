@@ -6,5 +6,4 @@ goenvtemplator2
 goenvtemplator2-amd64
 goenvtemplator2.tar.xz
 
-vendor
 dist/

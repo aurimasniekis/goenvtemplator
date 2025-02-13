@@ -52,13 +52,13 @@ func (ef *envFiles) String() string {
 	return fmt.Sprintf("%v", *ef)
 }
 
-func generateTemplates(ts templatesPaths, debug bool, delimLeft string, delimRight string) error {
+func generateTemplates(ts templatesPaths, debug bool, delimLeft string, delimRight string, keepBlankLines bool) error {
 	for _, t := range ts {
 		if v > 0 {
 			log.Printf("generating %s -> %s", t.source, t.destination)
 		}
-		if err := generateFile(t.source, t.destination, debug, delimLeft, delimRight); err != nil {
-			return fmt.Errorf("Error while generating '%s' -> '%s'. %v", t.source, t.destination, err)
+		if err := generateFile(t.source, t.destination, debug, delimLeft, delimRight, keepBlankLines); err != nil {
+			return fmt.Errorf("error while generating '%s' -> '%s'. %v", t.source, t.destination, err)
 		}
 	}
 	return nil
@@ -84,6 +84,8 @@ func main() {
 	flag.StringVar(&delimLeft, "delim-left", "", "Override default left delimiter {{.")
 	var delimRight string
 	flag.StringVar(&delimRight, "delim-right", "", "Override default right delimiter }}.")
+	var keepBlankLines bool
+	flag.BoolVar(&keepBlankLines, "keep-blank-lines", false, "Keep blank lines in the output.")
 	flag.IntVar(&v, "v", 0, "Verbosity level.")
 
 	flag.Parse()
@@ -105,7 +107,7 @@ func main() {
 		log.Print("Generating templates")
 	}
 
-	if err := generateTemplates(tmpls, debugTemplates, delimLeft, delimRight); err != nil {
+	if err := generateTemplates(tmpls, debugTemplates, delimLeft, delimRight, keepBlankLines); err != nil {
 		log.Fatal(err)
 	}
 
